@@ -17,6 +17,7 @@ nnUNet_preprocessed
 nnUNet_raw
 debug.json
 training_log_*
+*.nii.gz
 
 # Python
 __pycache__
