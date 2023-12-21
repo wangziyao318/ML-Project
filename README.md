@@ -15,8 +15,8 @@ We try to segment cardiac MRI 3D images from [Medical Decathlon](http://medicald
 preprocess, plan and generate fingerprint
 
 ```sh
-nnUNetv2_plan_and_preprocess -d 1 --verify_dataset_integrity -c 3d_fullres -np 8
-# 8 threads, use 3d_fullres configuration for small size image, on number 1 dataset, integrity verified
+nnUNetv2_plan_and_preprocess -d 1 --verify_dataset_integrity -c 3d_fullres -np 10
+# 10 threads, use 3d_fullres configuration for small size image, on number 1 dataset, integrity verified
 ```
 train: training needs 1000 epoches for each fold in 5-fold cross validation
 
