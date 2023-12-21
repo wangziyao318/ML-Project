@@ -18,6 +18,8 @@ nnUNet_raw
 debug.json
 training_log_*
 *.nii.gz
+*.npz
+*.pkl
 
 # Python
 __pycache__
