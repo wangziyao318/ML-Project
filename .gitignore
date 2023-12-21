@@ -1,0 +1,22 @@
+# Mac
+.DS_Store
+
+# Latex
+report.pdf
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+.latexmkrc
+_minted-*
+
+# nnUNet
+nnUNet_preprocessed
+nnUNet_raw
+debug.json
+training_log_*
+
+# Python
+__pycache__
