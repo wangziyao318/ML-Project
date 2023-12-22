@@ -21,8 +21,8 @@ nnUNetv2_plan_and_preprocess -d 1 --verify_dataset_integrity -c 3d_fullres -np 1
 train: training needs 1000 epoches for each fold in 5-fold cross validation
 
 ```sh
-nnUNetv2_train 1 3d_fullres ? -device cuda --npz
-# use cuda, on number 1 dataset, use 3d_fullres configuration, fold 0-4 in 5-fold cross validation, npz save softmax pred in final validation
+nnUNetv2_train 1 3d_fullres 0 -device cuda --npz
+# use cuda, on number 1 dataset, use 3d_fullres configuration, fold 0 in 5-fold cross validation, npz save softmax pred in final validation
 ```
 
 ### Use trained nnUNet to segment imagesTs
@@ -30,8 +30,18 @@ nnUNetv2_train 1 3d_fullres ? -device cuda --npz
 predict based on average of all folds 0-4
 
 ```sh
-nnUNetv2_predict -i .\nnUNet_raw\Dataset002_Hippocampus\imagesTr\ -o .\nnUNet_results\Dataset001_Hippocampus\nnUNetTrainer__nnUNetPlans__3d_fullres\pred\ -d 1 -c 3d_fullres -f ? -chk checkpoint_final.pth -npp 4 -nps 4 -device cuda
+nnUNetv2_predict -i .\nnUNet_raw\Dataset002_Hippocampus\imagesTr\ -o .\nnUNet_results\Dataset001_Hippocampus\nnUNetTrainer__nnUNetPlans__3d_fullres\pred\ -d 1 -c 3d_fullres -f 0 -chk checkpoint_final.pth -npp 4 -nps 4 -device cuda
 # use half data model to predict the other half
+```
+
+evaluate predict accuracy (preprocess test set first to generate gt segments)
+
+```sh
+nnUNetv2_plan_and_preprocess -d 2 --verify_dataset_integrity -c 3d_fullres -np 10
+```
+
+```sh
+nnUNetv2_evaluate_folder -djfile .\nnUNet_preprocessed\Dataset002_Hippocampus\dataset.json -pfile .\nnUNet_preprocessed\Dataset002_Hippocampus\nnUNetPlans.json .\nnUNet_preprocessed\Dataset002_Hippocampus\gt_segmentations\ .\nnUNet_results\Dataset001_Hippocampus\nnUNetTrainer__nnUNetPlans__3d_fullres\pred\
 ```
 
 ## Optimization
