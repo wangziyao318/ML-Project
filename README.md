@@ -27,7 +27,7 @@ nnUNetv2_train 1 3d_fullres 0 -device cuda --npz
 
 ### Use trained nnUNet to segment imagesTs
 
-predict based on average of all folds 0-4
+predict based on average of all folds 0-4, using checkpoint final and best
 
 ```sh
 nnUNetv2_predict -i .\nnUNet_raw\Dataset002_Hippocampus\imagesTr\ -o .\nnUNet_results\Dataset001_Hippocampus\nnUNetTrainer__nnUNetPlans__3d_fullres\pred\ -d 1 -c 3d_fullres -f 0 -chk checkpoint_final.pth -npp 4 -nps 4 -device cuda
