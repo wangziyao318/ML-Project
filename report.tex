@@ -119,7 +119,7 @@ Figure \ref{progress} shows the progress in 1000 epochs to train fold 0. During 
 
 If we modify the code to apply leakyReLU first, shown in Figure \ref{progressb}, the pseudo dice progresses to the oscillating state faster than default configuration (notice the axis value on the right side), and average training time per epoch is also faster (7.75s compared with 8.12s). This could lead to faster training time when combined with early stop.
 
-Table \ref{results} lists the prediction accuracy for hippocampus head and body as per dice and IoU.
+Table \ref{results} lists the prediction accuracy for hippocampus head and body as per dice and IoU. According to the results, we conclude that hippocampus head is easier to segment than body, and the order of normalization and activation function doesn't affect prediction accuracy of nnUNet. Thus, placing leakyReLU first can achieve shorter epoch time with similar accuracy.
 
 \begin{figure}
   \centering
@@ -160,11 +160,11 @@ Table \ref{results} lists the prediction accuracy for hippocampus head and body 
 
 \subsection{Early stop of epochs}
 
-
+From Figure \ref{progress}, the validation loss slightly increases as training loss decreases in high epochs, which implies model overfitting. To overcome that, except for cross validation, we can limit the number of epochs. For this small hippocampus MRI dataset (130 training data), 200 epochs would give good enough results. For other larger dataset, minimum epochs to enter the oscillating state would increase.
 
 \section{Discussion and future work}
 
-conclusion, strength and weakness of my contribution, future work to be done on sth.
+In this report, we conduct nnUNet-based segmentation on hippocampus MRI, and analyze the influence on training time and prediction accuracy by swapping normalization and ReLU, and introducing early stop in training. We conclude that placing ReLU first would reduce training time per epoch with similar prediction accuracy, and early stop is good enough for small dataset. The future work will be tuning default parameters in nnUNet to achieve better accuracy, and implementation of pseudo-dice-based early stop.
 
 \bibliographystyle{abbrvnat}
 \bibliography{report}
