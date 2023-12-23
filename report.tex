@@ -10,6 +10,7 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 \usepackage{xcolor}         % colors
+\usepackage{graphicx}       % graphics
 
 
 \title{nnUNet Segmentation on Hippocampus MRI}
@@ -36,18 +37,44 @@ In this way, however, nnUNet trades customization for generalization and may not
 
 In the report, we use the dataset of hippocampus MRI taken from Medical Segmentation Decathlon. We take half of the training set with labels as test set. The remaining half is used for training based on 5-fold cross validation. We use nnUNet to segment the dataset and modify its code to expect an improvement in the training accuracy and training time. On one hand, we swap the order of activation function and batch normalization in the neural network and observe a faster training per epoch with quite similar accuracy. On the other hand, we notice the loss function doesn't make any progress after some epochs and find that early stop can be introduced to faster terminate the training process without loss of test accuracy and reduce overfitting for this small dataset.
 
+%\newpage
+
 \section{Related work}
 
-norm + RELU in unet
+There have been numerous CNN-based segmentation works on hippocampus MRI, and here we mainly focus on the models used. It's acknowledged that the U-Net purposed by \citet{ronneberger2015u} is the origin of CNN-based medical image segmentation. As shown in Figure \ref{unetarch}, U-Net consists of double 3x3 convolutions, each followed by ReLU and a 2x2 max pooling operation with stride 2 for downsampling. The original U-Net is only for segmenting 2D biomedical images. There is no normalization process in U-Net and therefore it is vulnerable to gradient explosion, namely too large gradient lengthens the training time. Batch normalization purposed by \citet{ioffe2015batch} in the same year of U-Net fixes this. By putting normalization between each convolution and ReLU, the range of layer input is constrained and the gradient obtained from ReLU is also constrained from explosion. Batch normalization in this way means much faster training time. However, there's a debate in design of network on the order of batch normalization and activation function, and which of them comes first would affect slightly training time and accuracy.
 
-1000 epochs in nnunet
+\citet{isensee2021nnu} creates nnUNet from the original 2D U-Net and the later 3D U-Net, and add batch normalization between convolution and ReLU to boost training speed. Apart from that, nnUNet is designed to be out-of-the-box for non-experts by automatically finding the best configuration (\texttt{2D}, \texttt{3D\_fullres}, \texttt{3D\_fullres\_cascade}) and appropriate parameters for a given dataset, as shown in Figure \ref{nnunetarch}. However, nnUNet forces each training to last 1000 epochs and this may be too long or unnecessary for some small dataset.
 
-As \citet{isensee2021nnu} mentions, 
+From prior work, two things we focused are the order of normalization and ReLU, and the training epochs in nnUNet.
 
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.25]{./figs/unetarch.png}
+  \caption{U-Net architecture.}
+  \label{unetarch}
+\end{figure}
 
-\section{What I did}
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.28]{./figs/nnunetarch.png}
+  \caption{nnUNet architecture.}
+  \label{nnunetarch}
+\end{figure}
+
+% \begin{figure}
+%   \centering
+%   \includegraphics[scale=0.25]{./figs/hippoimg.png}
+%   \caption{Coronal views of hippocampus.}
+%   \label{hippoimg}
+% \end{figure}
+
+\section{nnUNet segmentation on hippocampus MRI}
 
 \subsection{Hippocampus}
+
+As shown in Figure ,
+
+
 
 
 
@@ -58,7 +85,7 @@ As \citet{isensee2021nnu} mentions,
 \subsection{nnUNet}
 
 
-\subsection{Training and Testing}
+\subsection{Training and testing}
 
 
 
@@ -81,15 +108,7 @@ conclusion, strength and weakness of my contribution, future work to be done on 
 
 
 
-\subsection*{Figures}
 
-
-\begin{figure}
-  \centering
-  \label{samplefigure}
-  \fbox{\rule[-.5cm]{0cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-  \caption{Sample figure caption.}
-\end{figure}
 
 
 \begin{table}
