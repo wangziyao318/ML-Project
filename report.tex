@@ -11,6 +11,7 @@
 \usepackage{microtype}      % microtypography
 \usepackage{xcolor}         % colors
 \usepackage{graphicx}       % graphics
+\usepackage{subcaption}     % subfigures
 
 
 \title{nnUNet Segmentation on Hippocampus MRI}
@@ -85,53 +86,85 @@ We obtain the hippocampus MRI data from Medical Segmentation Decathlon held in 2
 
 \subsection{Training and testing}
 
-The dataset comprises 260 hippocampus images with 260 label images. We take half of them as test set, and for the other half, we conduct 5-fold cross validation to train our nnUNet model.
+The dataset comprises 260 hippocampus images with 260 label images. We take half of them as test set, and for the other half, we conduct 5-fold cross validation to train our nnUNet model using nnuNet \texttt{3D} configuration with default parameters, and each fold lasts 1000 epochs. nnUNet uses double 3x3 convolutions similar with U-Net, each followed by z-score normalization and then leaky ReLU activation function. Figure \ref{nnunetwork} illustrates the structure of the neural network, where each black box is two copy of Conv3x3x3 \(\rightarrow\) zscore \(\rightarrow\) leakyReLU.
+
+Testing is done by first predicting the labels of test set and then comparing them with ground truth labels. We use dice and IoU coefficients to calculate prediction accuracy, as shown in Figure \ref{diceiou}, taken from \citet{huynh2023understanding}. Both of them have a range of \([0,1]\), where 1 indicates perfect prediction, but IoU penalizes more on low accuracy and is able to show more slightly difference.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.19]{./figs/nnunetwork.png}
+  \caption{nnUNet structure.}
+  \label{nnunetwork}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \begin{subfigure}{0.49\textwidth}
+    \includegraphics[width=\textwidth]{./figs/dice.png}
+  \end{subfigure}
+  \begin{subfigure}{0.49\textwidth}
+    \includegraphics[width=\textwidth]{./figs/iou.png}
+  \end{subfigure}
+  \caption{Dice and IoU.}
+  \label{diceiou}
+\end{figure}
 
 \section{Experiment and analysis}
 
-list results as table
+\subsection{Order of z-score and leaky ReLU}
 
-\subsection{norm+RELU and RELU+norm and nonorm}
+Apart from the Conv3x3x3 \(\rightarrow\) zscore \(\rightarrow\) leakyReLU configuration used in nnUNet by default, there's another option to swap normalization and activation function, namely Conv3x3x3 \(\rightarrow\) leakyReLU \(\rightarrow\) zscore. Since this swap is unavailable in nnUNet options, we modify the implementation of the network to make it happen. After modification, we carry out training and testing again, and record the progress and results.
 
+Figure \ref{progress} shows the progress in 1000 epochs to train fold 0. During training process, both training and validation loss sharply decreases at first, and then oscillating around some value. The pseudo dice is the random approximation of dice coefficient, and can be considered as the measurement of validation accuracy on each epoch.
 
+If we modify the code to apply leakyReLU first, shown in Figure \ref{progressb}, the pseudo dice progresses to the oscillating state faster than default configuration (notice the axis value on the right side), and average training time per epoch is also faster (7.75s compared with 8.12s). This could lead to faster training time when combined with early stop.
 
-\subsection{early stop of epoches based on sufficient small increment of validation loss}
+Table \ref{results} lists the prediction accuracy for hippocampus head and body as per dice and IoU.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}{0.49\textwidth}
+    \includegraphics[width=\textwidth]{./figs/normreluprogress.png}
+    \caption{Conv3x3x3 \(\rightarrow\) zscore \(\rightarrow\) leakyReLU}
+    \label{progressa}
+  \end{subfigure}
+  \begin{subfigure}{0.49\textwidth}
+    \includegraphics[width=\textwidth]{./figs/relunormprogress.png}
+    \caption{Conv3x3x3 \(\rightarrow\) leakyReLU \(\rightarrow\) zscore}
+    \label{progressb}
+  \end{subfigure}
+  \caption{Training progress in 1000 epochs.}
+  \label{progress}
+\end{figure}
+
+\begin{table}
+  \caption{nnUNet results}
+  \label{results}
+  \centering
+  \begin{tabular}{ccccc}
+    \toprule
+    & \multicolumn{2}{c}{Validation} & \multicolumn{2}{c}{Test} \\
+    \cmidrule(r){2-5}
+    & Dice & IoU & Dice & IoU \\
+    \midrule
+    zscore \(\rightarrow\) ReLU head &0.9107&0.8379&0.8840&0.7941\\
+    \cmidrule(r){1-1}
+    zscore \(\rightarrow\) ReLU body &0.8989&0.8180&0.8634&0.7616\\
+    \cmidrule(r){1-1}
+    ReLU \(\rightarrow\) zscore head &0.9104&0.8372&0.8843&0.7945\\
+    \cmidrule(r){1-1}
+    ReLU \(\rightarrow\) zscore body &0.8989&0.8181&0.8635&0.7618\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Early stop of epochs}
 
 
 
 \section{Discussion and future work}
 
-
 conclusion, strength and weakness of my contribution, future work to be done on sth.
-
-
-
-
-
-
-\begin{table}
-  \caption{Sample table title}
-  \label{sample-table}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \multicolumn{2}{c}{Part}                   \\
-    \cmidrule(r){1-2}
-    Name     & Description     & Size ($\mu$m) \\
-    \midrule
-    Dendrite & Input terminal  & $\sim$100     \\
-    Axon     & Output terminal & $\sim$10      \\
-    Soma     & Cell body       & up to $10^6$  \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-
-\section*{Supplementary Material}
-
-CLI commands
-
-modified codes
 
 \bibliographystyle{abbrvnat}
 \bibliography{report}
