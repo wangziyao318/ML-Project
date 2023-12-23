@@ -32,18 +32,17 @@
 
 The nnUNet is a CNN-based semantic segmentation method that is designed to work out-of-the-box in biomedical domain. Given a new dataset, nnUNet will first analyze it and extract its properties such as size, resolution, and foreground intensity as a dataset fingerprint. Then, it creates several configurations for the dataset, namely \texttt{2D}, \texttt{3D\_fullres}, and \texttt{3D\_fullres\_cascade}. After that, it set model parameters for each configuration based on the dataset fingerprint and hard-coded rules. Finally, nnUNet goes through training processes of each configuration and compares them to find the one with best validation accuracy. This whole pipeline is carried out automatically with simple CLI commands, which is good for non-experts in the machine learning field.
 
-In this way, however, nnUNet trades customization for generalization and may not perform good enough in a specific dataset. Also, there are some unnecessary processes in the pipeline if you know the dataset well. For instance, hippocampus MRI images are all captured in 3D, and thus training with \texttt{2D} configuration is a waste of time. MRI has a typical spatial resolution $\Delta=1$\texttt{mm}, and specify it in the dataset will ensure parameters to be appropriate. More tuning can be made to nnUNet to segment a specific dataset.
+In this way, however, nnUNet trades customization for generalization and may not perform good enough in a specific dataset. Also, there are some unnecessary processes in the pipeline if you know the dataset well. For instance, hippocampus MRI images are all captured in 3D, and thus training with \texttt{2D} configuration is a waste of time. MRI has a typical spatial resolution \(\Delta=1\)\texttt{mm}, and specify it in the dataset will ensure parameters to be appropriate. More tuning can be made to nnUNet to segment a specific dataset.
 
 In the report, we use the dataset of hippocampus MRI taken from Medical Segmentation Decathlon. We take half of the training set with labels as test set. The remaining half is used for training based on 5-fold cross validation. We use nnUNet to segment the dataset and modify its code to expect an improvement in the training accuracy and training time. On one hand, we swap the order of activation function and batch normalization in the neural network and observe a faster training per epoch with quite similar accuracy. On the other hand, we notice the loss function doesn't make any progress after some epochs and find that early stop can be introduced to faster terminate the training process without loss of test accuracy and reduce overfitting for this small dataset.
 
 \section{Related work}
 
-at least 3 papers on the problem and their limitations
-
 norm + RELU in unet
 
 1000 epochs in nnunet
 
+As \citet{isensee2021nnu} mentions, 
 
 
 \section{What I did}
@@ -82,57 +81,6 @@ conclusion, strength and weakness of my contribution, future work to be done on 
 
 
 
-
-
-
-\section*{Citations, figures, tables, references}
-\label{others}
-
-\subsection*{Citations within the text}
-
-
-The \verb+natbib+ package will be loaded for you by default.  Citations may be
-author/year or numeric, as long as you maintain internal consistency.  As to the
-format of the references themselves, any style is acceptable as long as it is
-used consistently.
-
-
-The documentation for \verb+natbib+ may be found at
-\begin{center}
-  \url{http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}
-\end{center}
-Of note is the command \verb+\citet+, which produces citations appropriate for
-use in inline text.  For example,
-\begin{verbatim}
-   \citet{hasselmo} investigated\dots
-\end{verbatim}
-produces
-\begin{quote}
-  Hasselmo, et al.\ (1995) investigated\dots
-\end{quote}
-
-
-If you wish to load the \verb+natbib+ package with options, you may add the
-following before loading the \verb+neurips_2023+ package:
-\begin{verbatim}
-   \PassOptionsToPackage{options}{natbib}
-\end{verbatim}
-
-
-If \verb+natbib+ clashes with another package you load, you can add the optional
-argument \verb+nonatbib+ when loading the style file:
-\begin{verbatim}
-   \usepackage[nonatbib]{neurips_2023}
-\end{verbatim}
-
-
-As submission is double blind, refer to your own published work in the third
-person. That is, use ``In the previous work of Jones et al.\ [4],'' not ``In our
-previous work [4].'' If you cite your other papers that are not widely available
-(e.g., a journal paper under review), use anonymous author names in the
-citation, e.g., an author of the form ``A.\ Anonymous'' and include a copy of the anonymized paper in the supplementary material.
-
-
 \subsection*{Figures}
 
 
@@ -142,40 +90,6 @@ citation, e.g., an author of the form ``A.\ Anonymous'' and include a copy of th
   \fbox{\rule[-.5cm]{0cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
   \caption{Sample figure caption.}
 \end{figure}
-
-
-All artwork must be neat, clean, and legible. Lines should be dark enough for
-purposes of reproduction. The figure number and caption always appear after the
-figure. Place one line space before the figure caption and one line space after
-the figure. The figure caption should be lower case (except for first word and
-proper nouns); figures are numbered consecutively. As shown in Figure~\ref{samplefigure}
-
-
-You may use color figures.  However, it is best for the figure captions and the
-paper body to be legible if the paper is printed in either black/white or in
-color.
-
-
-\subsection*{Tables}
-
-
-All tables must be centered, neat, clean and legible.  The table number and
-title always appear before the table.  See Table~\ref{sample-table}.
-
-
-Place one line space before the table title, one line space after the
-table title, and one line space after the table. The table title must
-be lower case (except for first word and proper nouns); tables are
-numbered consecutively.
-
-
-Note that publication-quality tables \emph{do not contain vertical rules.} We
-strongly suggest the use of the \verb+booktabs+ package, which allows for
-typesetting high-quality, professional tables:
-\begin{center}
-  \url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-This package was used to typeset Table~\ref{sample-table}.
 
 
 \begin{table}
@@ -195,9 +109,6 @@ This package was used to typeset Table~\ref{sample-table}.
   \end{tabular}
 \end{table}
 
-\subsection*{Math}
-Please use LaTeX (or AMSTeX) commands for unnumbered display math. (You really shouldn't be using \$\$ anyway)
-
 
 \section*{Supplementary Material}
 
@@ -205,31 +116,8 @@ CLI commands
 
 modified codes
 
-\section*{References}
-
-\medskip
-
-{
-\small
-
-
-[1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms for
-connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and T.K.\ Leen
-(eds.), {\it Advances in Neural Information Processing Systems 7},
-pp.\ 609--616. Cambridge, MA: MIT Press.
-
-
-[2] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS: Exploring
-  Realistic Neural Models with the GEneral NEural SImulation System.}  New York:
-TELOS/Springer--Verlag.
-
-
-[3] Hasselmo, M.E., Schnell, E.\ \& Barkai, E.\ (1995) Dynamics of learning and
-recall at excitatory recurrent synapses and cholinergic modulation in rat
-hippocampal region CA3. {\it Journal of Neuroscience} {\bf 15}(7):5249-5262.
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{abbrvnat}
+\bibliography{report}
 
 
 \end{document}

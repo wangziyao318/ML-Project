@@ -11,6 +11,8 @@ report.pdf
 *.synctex.gz
 .latexmkrc
 _minted-*
+*.bbl
+*.blg
 
 # nnUNet
 nnUNet_preprocessed
