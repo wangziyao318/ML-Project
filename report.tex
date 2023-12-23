@@ -24,31 +24,61 @@
 \maketitle
 
 \begin{abstract}
-  Only one paragraph.
-  We do nnUNet segmentation in different configurations and compared them.
+  The nnUNet is a CNN-based semantic segmentation method that is designed to work out-of-the-box in biomedical domain. It can automatically adapt to the given dataset and configure a corresponding U-Net segmentation pipeline, and is therefore widely adopted by medical imaging scientists. In this way, however, nnUNet trades customization for generalization and may not perform good enough in a specific dataset. In the report, we use nnUNet to segment hippocampus MRI images and modify its code to expect an improvement in the training accuracy and training time. We conclude that placing activation function before batch normalization in nnUNet achieves faster training with slightly better accuracy for hippocampus MRI. Also, early stop can be introduced in nnUNet training process to reduce overfitting for a relatively small dataset.
 \end{abstract}
 
 
 \section{Introduction}
 
+The nnUNet is a CNN-based semantic segmentation method that is designed to work out-of-the-box in biomedical domain. Given a new dataset, nnUNet will first analyze it and extract its properties such as size, resolution, and foreground intensity as a dataset fingerprint. Then, it creates several configurations for the dataset, namely \texttt{2D}, \texttt{3D\_fullres}, and \texttt{3D\_fullres\_cascade}. After that, it set model parameters for each configuration based on the dataset fingerprint and hard-coded rules. Finally, nnUNet goes through training processes of each configuration and compares them to find the one with best validation accuracy. This whole pipeline is carried out automatically with simple CLI commands, which is good for non-experts in the machine learning field.
 
-Clearly state (1) the problem, (2) why the problem is important to work with, (3) limitation of prior work, (4) my contribution.
+In this way, however, nnUNet trades customization for generalization and may not perform good enough in a specific dataset. Also, there are some unnecessary processes in the pipeline if you know the dataset well. For instance, hippocampus MRI images are all captured in 3D, and thus training with \texttt{2D} configuration is a waste of time. MRI has a typical spatial resolution $\Delta=1$\texttt{mm}, and specify it in the dataset will ensure parameters to be appropriate. More tuning can be made to nnUNet to segment a specific dataset.
+
+In the report, we use the dataset of hippocampus MRI taken from Medical Segmentation Decathlon. We take half of the training set with labels as test set. The remaining half is used for training based on 5-fold cross validation. We use nnUNet to segment the dataset and modify its code to expect an improvement in the training accuracy and training time. On one hand, we swap the order of activation function and batch normalization in the neural network and observe a faster training per epoch with quite similar accuracy. On the other hand, we notice the loss function doesn't make any progress after some epochs and find that early stop can be introduced to faster terminate the training process without loss of test accuracy and reduce overfitting for this small dataset.
 
 \section{Related work}
+
+at least 3 papers on the problem and their limitations
+
+norm + RELU in unet
+
+1000 epochs in nnunet
 
 
 
 \section{What I did}
 
+\subsection{Hippocampus}
+
+
+
+\subsection{MRI}
+
+
+
+\subsection{nnUNet}
+
+
+\subsection{Training and Testing}
+
 
 
 \section{Experiment and analysis}
+
+list results as table
+
+\subsection{norm+RELU and RELU+norm and nonorm}
+
+
+
+\subsection{early stop of epoches based on sufficient small increment of validation loss}
+
 
 
 \section{Discussion and future work}
 
 
-
+conclusion, strength and weakness of my contribution, future work to be done on sth.
 
 
 
@@ -108,6 +138,7 @@ citation, e.g., an author of the form ``A.\ Anonymous'' and include a copy of th
 
 \begin{figure}
   \centering
+  \label{samplefigure}
   \fbox{\rule[-.5cm]{0cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
   \caption{Sample figure caption.}
 \end{figure}
@@ -117,7 +148,7 @@ All artwork must be neat, clean, and legible. Lines should be dark enough for
 purposes of reproduction. The figure number and caption always appear after the
 figure. Place one line space before the figure caption and one line space after
 the figure. The figure caption should be lower case (except for first word and
-proper nouns); figures are numbered consecutively.
+proper nouns); figures are numbered consecutively. As shown in Figure~\ref{samplefigure}
 
 
 You may use color figures.  However, it is best for the figure captions and the
@@ -170,17 +201,13 @@ Please use LaTeX (or AMSTeX) commands for unnumbered display math. (You really s
 
 \section*{Supplementary Material}
 
+CLI commands
+
+modified codes
 
 \section*{References}
 
-
-References follow the acknowledgments in the camera-ready paper. Use unnumbered first-level heading for
-the references. Any choice of citation style is acceptable as long as you are
-consistent. It is permissible to reduce the font size to \verb+small+ (9 point)
-when listing the references.
-Note that the Reference section does not count towards the page limit.
 \medskip
-
 
 {
 \small
