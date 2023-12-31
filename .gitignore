@@ -15,8 +15,8 @@ _minted-*
 *.blg
 
 # nnUNet
-nnUNet_preprocessed
-nnUNet_raw
+preprocessed
+raw
 debug.json
 training_log_*
 *.nii.gz
@@ -25,3 +25,4 @@ training_log_*
 
 # Python
 __pycache__
+.venv
