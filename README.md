@@ -6,6 +6,23 @@ We try to segment cardiac MRI 3D images from [Medical Decathlon](http://medicald
 
 ### Following instructions to deploy nnUNet
 
+Create venv
+
+```sh
+python -m venv .venv
+```
+
+In the virtual environment, install torch
+
+```
+pip3 install torch --index-url https://download.pytorch.org/whl/cu121
+```
+
+Install nnUNet as pip package
+
+```
+pip3 install -e path/to/nnUNet
+```
 
 ### Train nnUNet on imagesTr given labelsTr
 
