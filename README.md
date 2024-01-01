@@ -32,14 +32,14 @@ pip3 install -e path/to/nnUNet
 preprocess, plan and generate fingerprint
 
 ```sh
-nnUNetv2_plan_and_preprocess -d 1 --verify_dataset_integrity -c 3d_fullres -np 10
-# 10 threads, use 3d_fullres configuration for small size image, on number 1 dataset, integrity verified
+nnUNetv2_plan_and_preprocess -d 1 -c 3d_fullres
+# 10 threads, use 3d_fullres configuration for small size image, on number 1 dataset
 ```
 train: training needs 1000 epoches for each fold in 5-fold cross validation
 
 ```sh
-nnUNetv2_train 1 3d_fullres 0 -device cuda --npz
-# use cuda, on number 1 dataset, use 3d_fullres configuration, fold 0 in 5-fold cross validation, npz save softmax pred in final validation
+nnUNetv2_train 1 3d_fullres 0 -device cuda
+# use cuda, on number 1 dataset, use 3d_fullres configuration, fold 0 in 5-fold cross validation
 ```
 
 ### Use trained nnUNet to segment imagesTs
