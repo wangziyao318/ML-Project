@@ -17,11 +17,7 @@ _minted-*
 # nnUNet
 preprocessed
 raw
-debug.json
-training_log_*
-*.nii.gz
-*.npz
-*.pkl
+results
 
 # Python
 __pycache__

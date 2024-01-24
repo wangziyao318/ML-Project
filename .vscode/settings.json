@@ -1,5 +1,5 @@
 {
-    "terminal.integrated.env.windows": {
+    "terminal.integrated.env.linux": {
         "nnUNet_raw": "raw",
         "nnUNet_preprocessed": "preprocessed",
         "nnUNet_results": "results"

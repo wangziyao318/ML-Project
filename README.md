@@ -6,7 +6,7 @@ We try to segment cardiac MRI 3D images from [Medical Decathlon](http://medicald
 
 ### Following instructions to deploy nnUNet
 
-Create venv
+Create venv (or using vscode function)
 
 ```sh
 python -m venv .venv
@@ -14,31 +14,51 @@ python -m venv .venv
 
 In the virtual environment, install torch
 
-```
+```sh
 pip3 install torch --index-url https://download.pytorch.org/whl/cu121
 ```
 
 Install nnUNet as pip package
 
+```sh
+pip3 install -e path/to/nnUNet # modified
+pip3 install nnunetv2 # original
 ```
-pip3 install -e path/to/nnUNet
+
+A sample dataset.json
+
+```json
+{
+  "channel_names": {
+    "0": "MRI"
+  },
+  "labels": {
+    "background": 0,
+    "Anterior": 1,
+    "Posterior": 2
+  },
+  "numTraining": 260,
+  "numTest": 130,
+  "file_ending": ".nii.gz",
+  "overwrite_image_reader_writer": "SimpleITKIO"
+}
 ```
 
 ### Train nnUNet on imagesTr given labelsTr
 
-- dataset hippocampus is 4 times faster than cardiac, due to small image size
-- dataset 1 and 2 are half of training set, we discard test set since it has no labels data
+- we use dataset004_hippocampus
+- training and test data are each half of whole training set, we discard test set since it has no labels data
 
 preprocess, plan and generate fingerprint
 
 ```sh
-nnUNetv2_plan_and_preprocess -d 1 -c 3d_fullres
+nnUNetv2_plan_and_preprocess -d 4 -c 3d_fullres
 # 10 threads, use 3d_fullres configuration for small size image, on number 1 dataset
 ```
 train: training needs 1000 epoches for each fold in 5-fold cross validation
 
 ```sh
-nnUNetv2_train 1 3d_fullres 0 -device cuda
+nnUNetv2_train 4 3d_fullres 0 -device cuda
 # use cuda, on number 1 dataset, use 3d_fullres configuration, fold 0 in 5-fold cross validation
 ```
 
@@ -47,7 +67,7 @@ nnUNetv2_train 1 3d_fullres 0 -device cuda
 predict based on average of all folds 0-4, using checkpoint final and best
 
 ```sh
-nnUNetv2_predict -i .\nnUNet_raw\Dataset002_Hippocampus\imagesTr\ -o .\nnUNet_results\Dataset001_Hippocampus\nnUNetTrainer__nnUNetPlans__3d_fullres\pred\ -d 1 -c 3d_fullres -f 0 -chk checkpoint_final.pth -npp 4 -nps 4 -device cuda
+nnUNetv2_predict -i .\raw\Dataset004_Hippocampus\imagesTs\ -o .\results\Dataset004_Hippocampus\nnUNetTrainer__nnUNetPlans__3d_fullres\pred\ -d 4 -c 3d_fullres -f 0 -chk checkpoint_final.pth -npp 4 -nps 4 -device cuda
 # use half data model to predict the other half
 ```
 
