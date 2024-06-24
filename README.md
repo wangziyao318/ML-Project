@@ -1,6 +1,6 @@
 # ML Project
 
-We try to segment cardiac MRI 3D images from [Medical Decathlon](http://medicaldecathlon.com/) using [nnUNet](https://github.com/MIC-DKFZ/nnUNet/) that performed well in its competition, and use dice / NSD metrics to evaluate its accuracy from test set.
+I try to segment cardiac MRI 3D images from [Medical Decathlon](http://medicaldecathlon.com/) using [nnUNet](https://github.com/MIC-DKFZ/nnUNet/) that performed well in its competition, and use dice / NSD metrics to evaluate its accuracy from test set.
 
 ## Procedures
 
@@ -88,4 +88,3 @@ nnUNetv2_evaluate_folder -djfile .\nnUNet_preprocessed\Dataset002_Hippocampus\da
 3. hiddenlayer to generate neural network structure https://github.com/waleedka/hiddenlayer
 4. set "nnUNet_n_proc_DA" training threads
 5. change 5-fold cross validation split https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/how_to_use_nnunet.md
-6. 
